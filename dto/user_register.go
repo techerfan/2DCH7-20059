@@ -6,7 +6,7 @@ type (
 	UserRegisterRequest struct {
 		FirstName   string        `json:"first_name"`
 		LastName    string        `json:"last_name"`
-		Gender      entity.Gender `json:"Gender"`
+		Gender      entity.Gender `json:"gender"`
 		Email       string        `json:"email"`
 		PhoneNumber string        `json:"phone_number"`
 		Password    string        `json:"password"`
