@@ -3,6 +3,7 @@ package entity
 import "time"
 
 type Reservation struct {
+	ID            uint          `json:"id"`
 	NumberOfSeats uint8         `json:"number_of_seats"`
 	UserID        uint          `json:"user_id"`
 	TableID       uint          `json:"table_id"`
