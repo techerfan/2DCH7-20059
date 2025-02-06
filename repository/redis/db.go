@@ -9,10 +9,10 @@ import (
 )
 
 type Config struct {
-	Host     string
-	Port     int
-	Password string
-	DB       int
+	Host string
+	Port int
+	// Password string
+	// DB       int
 }
 
 type DB struct {
@@ -21,9 +21,9 @@ type DB struct {
 
 func New(config Config) DB {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%d", config.Host, config.Port),
-		Password: config.Password,
-		DB:       config.DB,
+		Addr: fmt.Sprintf("%s:%d", config.Host, config.Port),
+		// Password: config.Password,
+		// DB:       config.DB,
 	})
 
 	return DB{client: rdb}
