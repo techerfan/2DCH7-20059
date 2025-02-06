@@ -13,6 +13,7 @@ import (
 )
 
 //go:generate mockgen -source=./service.go -destination=../../mocks/user_repository_mock/user_repository.go -package=user_repository_mock . Repository
+//go:generate mockgen -source=./service.go -destination=../../mocks/user_cache_mock/user_repository.go -package=user_cache_mock . Cache
 
 type Repository interface {
 	Register(context.Context, entity.User) (entity.User, error)
