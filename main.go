@@ -13,6 +13,9 @@ import (
 	"github.com/techerfan/2DCH7-20059/service/reservationservice"
 	"github.com/techerfan/2DCH7-20059/service/tableservice"
 	"github.com/techerfan/2DCH7-20059/service/userservice"
+	"github.com/techerfan/2DCH7-20059/validator/reservationvalidator"
+	"github.com/techerfan/2DCH7-20059/validator/tablevalidator"
+	"github.com/techerfan/2DCH7-20059/validator/uservalidator"
 
 	_ "github.com/techerfan/2DCH7-20059/docs/swagger"
 )
@@ -76,6 +79,10 @@ func main() {
 	// TODO: this must be replaced with a real logger
 	var dummyLogger logger.Logger = logger.DummyLogger{}
 
+	userValidaor := uservalidator.New(postgresDB)
+	tableValidator := tablevalidator.New(postgresDB)
+	reservationValidator := reservationvalidator.New(postgresDB)
+
 	// HTTP server instance
 	httpServer := fiber.New(
 		tokenGenerator,
@@ -84,6 +91,9 @@ func main() {
 		userService,
 		tableService,
 		reservationService,
+		userValidaor,
+		tableValidator,
+		reservationValidator,
 	)
 
 	// Start the server
