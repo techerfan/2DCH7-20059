@@ -2,8 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 
 	"github.com/techerfan/2DCH7-20059/entity"
+	"gorm.io/gorm"
 )
 
 func (p *PostgresDB) AddTable(ctx context.Context, table entity.Table) (entity.Table, error) {
@@ -45,4 +47,30 @@ func (p *PostgresDB) FindTableByID(ctx context.Context, id uint) (entity.Table, 
 	}
 
 	return mapTableToTableEntity(table), nil
+}
+
+func (p *PostgresDB) DoesTableExist(id uint) (bool, error) {
+	var table Table
+	if err := p.db.Where("id = ?", id).First(&table).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return true, nil
+}
+
+func (p *PostgresDB) DoesTableExistByTableNum(no uint8) (bool, error) {
+	var table Table
+	if err := p.db.Where("number = ?", no).First(&table).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return true, nil
 }

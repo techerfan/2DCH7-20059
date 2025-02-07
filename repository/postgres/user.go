@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/techerfan/2DCH7-20059/entity"
+	"gorm.io/gorm"
 )
 
 // Register creates a new user
@@ -38,4 +40,15 @@ func (p *PostgresDB) FindUserByEmail(ctx context.Context, email string) (entity.
 	}
 
 	return mapUsertoUserEntity(user), nil
+}
+
+func (p *PostgresDB) IsEmailUnique(email string) (bool, error) {
+	var user User
+	if err := p.db.Where("email = ?", email).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return true, nil
+		}
+		return true, err
+	}
+	return false, nil
 }

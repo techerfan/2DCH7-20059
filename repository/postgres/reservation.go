@@ -2,9 +2,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/techerfan/2DCH7-20059/entity"
+	"gorm.io/gorm"
 )
 
 func (p *PostgresDB) FindReservationsByTableIDAndDate(ctx context.Context, tableID uint, date time.Time) ([]entity.Reservation, error) {
@@ -68,4 +70,15 @@ func (p *PostgresDB) UpdateReservation(ctx context.Context, req entity.Reservati
 	}
 
 	return mapReservationToReservationEntity(reservation), nil
+}
+
+func (p *PostgresDB) DoesReservationExist(ctx context.Context, id uint) (bool, error) {
+	var reservation Reservation
+	if err := p.db.WithContext(ctx).Where("id = ?", id).First(&reservation).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
