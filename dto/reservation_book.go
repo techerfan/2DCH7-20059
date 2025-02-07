@@ -4,8 +4,8 @@ import "time"
 
 type (
 	ReservationBookRequest struct {
-		NumberOfSeats uint8 `json:"number_of_seats"`
-		UserID        uint
+		NumberOfSeats uint8     `json:"number_of_seats"`
+		UserID        uint      `json:"-"`
 		StartDT       time.Time `json:"start_dt"`
 		EndDT         time.Time `json:"end_dt"`
 	}
