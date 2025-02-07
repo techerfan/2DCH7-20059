@@ -6,7 +6,7 @@ services:
     image: redis
     container_name: redis_service
     ports:
-      - '6379:6379'
+      - '${REDIS_PORT}:${REDIS_PORT}'
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
@@ -18,9 +18,9 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD_FILE=${POSTGRES_PASSWORD_FILE}
     volumes:
       - pgdata:/var/lib/postgresql/data
     secrets:
@@ -44,13 +44,13 @@ services:
       - redis
       - postgres
     environment:
-      PORT: 8085
-      REDIS_PORT: 6379
-      POSTGRES_PORT: 5432
-      DBName: postgres
-      DBUser: postgres
-      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
-      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      - PORT=${PORT}
+      - REDIS_PORT=${REDIS_PORT}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - DBName=${POSTGRES_DB}
+      - DBUser=${POSTGRES_USER}
+      - POSTGRES_PASSWORD_FILE=${POSTGRES_PASSWORD_FILE}
+      - JWT_SECRET_FILE=${JWT_SECRET_FILE}
     secrets:
       - db_password
       - jwt_secret
