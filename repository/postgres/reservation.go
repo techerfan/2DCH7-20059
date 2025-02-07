@@ -8,6 +8,7 @@ import (
 )
 
 func (p *PostgresDB) FindReservationsByTableIDAndDate(ctx context.Context, tableID uint, date time.Time) ([]entity.Reservation, error) {
+	date = date.UTC()
 	startDate := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.UTC).Format(time.RFC3339)
 	endDate := time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999999999, time.UTC).Format(time.RFC3339)
 
@@ -30,11 +31,14 @@ func (p *PostgresDB) CheckInterval(ctx context.Context, tableID uint, startDT, e
 	// - specify the table id
 	// - check reservations that are not canceled
 
+	startDT = startDT.UTC()
+	endDT = endDT.UTC()
+
 	var count int64
 	err := p.db.WithContext(ctx).
 		Model(&Reservation{}).
 		Where("table_id = ? AND is_canceled = ?", tableID, false).
-		Where("start_dt < ? AND end_dt > ?", endDT.Format(time.RFC3339), startDT.Format(time.RFC3339)).
+		Where("start_dt <= ? AND end_dt >= ?", startDT, startDT).
 		Count(&count).Error
 	if err != nil {
 		return 0, err
@@ -54,8 +58,10 @@ func (p *PostgresDB) FindReservationByID(ctx context.Context, id uint) (entity.R
 
 func (p *PostgresDB) CreateReservation(ctx context.Context, req entity.Reservation) (entity.Reservation, error) {
 	reservation := mapReservationEntitytoReservation(req)
-	if err := p.db.WithContext(ctx).Create(&reservation); err != nil {
-		return entity.Reservation{}, nil
+	reservation.StartDT = reservation.StartDT.UTC()
+	reservation.EndDT = reservation.EndDT.UTC()
+	if err := p.db.WithContext(ctx).Create(&reservation).Error; err != nil {
+		return entity.Reservation{}, err
 	}
 
 	return mapReservationToReservationEntity(reservation), nil
