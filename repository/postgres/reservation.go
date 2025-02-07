@@ -8,9 +8,8 @@ import (
 )
 
 func (p *PostgresDB) FindReservationsByTableIDAndDate(ctx context.Context, tableID uint, date time.Time) ([]entity.Reservation, error) {
-	date = date.UTC()
-	startDate := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, time.UTC).Format(time.RFC3339)
-	endDate := time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999999999, time.UTC).Format(time.RFC3339)
+	startDate := time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location()).Format(time.RFC3339)
+	endDate := time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 59, 999999999, date.Location()).Format(time.RFC3339)
 
 	var reservations []Reservation
 	if err := p.db.WithContext(ctx).Where("table_id = ? AND start_dt BETWEEN ? AND ?", tableID, startDate, endDate).Find(&reservations).Error; err != nil {
@@ -30,9 +29,6 @@ func (p *PostgresDB) CheckInterval(ctx context.Context, tableID uint, startDT, e
 	// - check the interval
 	// - specify the table id
 	// - check reservations that are not canceled
-
-	startDT = startDT.UTC()
-	endDT = endDT.UTC()
 
 	var count int64
 	err := p.db.WithContext(ctx).
@@ -58,8 +54,6 @@ func (p *PostgresDB) FindReservationByID(ctx context.Context, id uint) (entity.R
 
 func (p *PostgresDB) CreateReservation(ctx context.Context, req entity.Reservation) (entity.Reservation, error) {
 	reservation := mapReservationEntitytoReservation(req)
-	reservation.StartDT = reservation.StartDT.UTC()
-	reservation.EndDT = reservation.EndDT.UTC()
 	if err := p.db.WithContext(ctx).Create(&reservation).Error; err != nil {
 		return entity.Reservation{}, err
 	}
