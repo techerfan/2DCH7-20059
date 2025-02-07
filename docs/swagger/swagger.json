@@ -487,9 +487,6 @@
                 },
                 "start_dt": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -514,6 +511,9 @@
             "type": "object",
             "properties": {
                 "reservation_id": {
+                    "type": "integer"
+                },
+                "userID": {
                     "type": "integer"
                 }
             }

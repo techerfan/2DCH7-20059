@@ -495,9 +495,6 @@ const docTemplate = `{
                 },
                 "start_dt": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -522,6 +519,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "reservation_id": {
+                    "type": "integer"
+                },
+                "userID": {
                     "type": "integer"
                 }
             }

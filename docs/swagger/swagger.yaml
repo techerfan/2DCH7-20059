@@ -27,8 +27,6 @@ definitions:
         type: integer
       start_dt:
         type: string
-      user_id:
-        type: integer
     type: object
   dto.ReservationBookResponse:
     properties:
@@ -44,6 +42,8 @@ definitions:
   dto.ReservationCancelRequest:
     properties:
       reservation_id:
+        type: integer
+      userID:
         type: integer
     type: object
   dto.ReservationCancelResponse:
