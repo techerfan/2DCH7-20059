@@ -37,3 +37,12 @@ func (p *PostgresDB) FindTables(ctx context.Context) ([]entity.Table, error) {
 
 	return resp, nil
 }
+
+func (p *PostgresDB) FindTableByID(ctx context.Context, id uint) (entity.Table, error) {
+	var table Table
+	if err := p.db.WithContext(ctx).Where("id = ?", id).First(&table).Error; err != nil {
+		return entity.Table{}, err
+	}
+
+	return mapTableToTableEntity(table), nil
+}
