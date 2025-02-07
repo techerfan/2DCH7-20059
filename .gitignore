@@ -1,3 +1,4 @@
 .vscode
 .github
 go.sum
+__debug*
