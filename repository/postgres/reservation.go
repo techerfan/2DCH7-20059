@@ -23,3 +23,49 @@ func (p *PostgresDB) FindReservationsByTableIDAndDate(ctx context.Context, table
 
 	return resp, nil
 }
+
+func (p *PostgresDB) CheckInterval(ctx context.Context, tableID uint, startDT, endDT time.Time) (int64, error) {
+	// Requirements:
+	// - check the interval
+	// - specify the table id
+	// - check reservations that are not canceled
+
+	var count int64
+	err := p.db.WithContext(ctx).
+		Model(&Reservation{}).
+		Where("table_id = ? AND is_canceled = ?", tableID, false).
+		Where("start_dt < ? AND end_dt > ?", endDT.Format(time.RFC3339), startDT.Format(time.RFC3339)).
+		Count(&count).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (p *PostgresDB) FindReservationByID(ctx context.Context, id uint) (entity.Reservation, error) {
+	var reservation Reservation
+	if err := p.db.WithContext(ctx).Where("id = ?", id).First(&reservation).Error; err != nil {
+		return entity.Reservation{}, err
+	}
+
+	return mapReservationToReservationEntity(reservation), nil
+}
+
+func (p *PostgresDB) CreateReservation(ctx context.Context, req entity.Reservation) (entity.Reservation, error) {
+	reservation := mapReservationEntitytoReservation(req)
+	if err := p.db.WithContext(ctx).Create(&reservation); err != nil {
+		return entity.Reservation{}, nil
+	}
+
+	return mapReservationToReservationEntity(reservation), nil
+}
+
+func (p *PostgresDB) UpdateReservation(ctx context.Context, req entity.Reservation) (entity.Reservation, error) {
+	reservation := mapReservationEntitytoReservation(req)
+	if err := p.db.WithContext(ctx).Save(&reservation); err != nil {
+		return entity.Reservation{}, nil
+	}
+
+	return mapReservationToReservationEntity(reservation), nil
+}
