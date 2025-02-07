@@ -2,6 +2,7 @@ package reservationservice
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sort"
 	"time"
@@ -9,6 +10,10 @@ import (
 	"github.com/techerfan/2DCH7-20059/contract"
 	"github.com/techerfan/2DCH7-20059/dto"
 	"github.com/techerfan/2DCH7-20059/entity"
+)
+
+var (
+	ErrNoAvailableTable = errors.New("there is no available table at the specified time")
 )
 
 type ReservationRepository interface {
@@ -95,7 +100,7 @@ func (s *Service) Book(ctx context.Context, req dto.ReservationBookRequest) (dto
 
 	// if the id of selected table is zero, it means there is no available table
 	if selectedTable.ID == 0 {
-		return dto.ReservationBookResponse{}, fmt.Errorf("there is no available table at the specified time")
+		return dto.ReservationBookResponse{}, ErrNoAvailableTable
 	}
 
 	// Make the reservation
