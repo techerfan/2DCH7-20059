@@ -111,6 +111,8 @@ definitions:
       token:
         type: string
     type: object
+  dto.UserLogoutResponse:
+    type: object
   dto.UserRegisterRequest:
     properties:
       email:
@@ -217,17 +219,20 @@ paths:
       consumes:
       - application/json
       description: Add a new table
+      parameters:
+      - description: payload
+        in: body
+        name: '"payload"'
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TableAddRequest'
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.TableAddResponse'
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.TableAddRequest'
+            $ref: '#/definitions/dto.TableAddResponse'
         "400":
           description: bad request
         "401":
@@ -271,6 +276,13 @@ paths:
       consumes:
       - application/json
       description: Delete a table
+      parameters:
+      - description: payload
+        in: body
+        name: '"payload"'
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TableRemoveRequest'
       produces:
       - application/json
       responses:
@@ -296,6 +308,10 @@ paths:
       consumes:
       - application/json
       description: Get the timetable
+      parameters:
+      - in: query
+        name: dt
+        type: string
       produces:
       - application/json
       responses:
@@ -321,6 +337,13 @@ paths:
       consumes:
       - application/json
       description: login
+      parameters:
+      - description: payload
+        in: body
+        name: '"payload"'
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserLoginRequest'
       produces:
       - application/json
       responses:
@@ -341,11 +364,43 @@ paths:
       summary: login
       tags:
       - user
+  /users/logout:
+    get:
+      consumes:
+      - application/json
+      description: logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserLogoutResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: logout
+      tags:
+      - user
   /users/register:
     post:
       consumes:
       - application/json
       description: Register a new user
+      parameters:
+      - description: payload
+        in: body
+        name: '"payload"'
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UserRegisterRequest'
       produces:
       - application/json
       responses:

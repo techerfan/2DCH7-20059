@@ -140,17 +140,22 @@ const docTemplate = `{
                     "table"
                 ],
                 "summary": "Add a new table",
-                "responses": {
-                    "200": {
-                        "description": "OK",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "\"payload\"",
+                        "in": "body",
+                        "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.TableAddResponse"
+                            "$ref": "#/definitions/dto.TableAddRequest"
                         }
-                    },
+                    }
+                ],
+                "responses": {
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/dto.TableAddRequest"
+                            "$ref": "#/definitions/dto.TableAddResponse"
                         }
                     },
                     "400": {
@@ -226,6 +231,17 @@ const docTemplate = `{
                     "table"
                 ],
                 "summary": "Delete a table",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "\"payload\"",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.TableRemoveRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -266,6 +282,13 @@ const docTemplate = `{
                     "table"
                 ],
                 "summary": "Get the timetable",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "dt",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -306,11 +329,62 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "login",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "\"payload\"",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserLoginRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.UserLoginResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "bad request"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal error"
+                    }
+                }
+            }
+        },
+        "/users/logout": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "logout",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "logout",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserLogoutResponse"
                         }
                     },
                     "400": {
@@ -346,6 +420,17 @@ const docTemplate = `{
                     "user"
                 ],
                 "summary": "Register a new user",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "\"payload\"",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UserRegisterRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -542,6 +627,9 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "dto.UserLogoutResponse": {
+            "type": "object"
         },
         "dto.UserRegisterRequest": {
             "type": "object",
