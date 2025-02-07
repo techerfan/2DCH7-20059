@@ -66,6 +66,7 @@ func (h *Handler) HandleLogin(accountService contract.UserService) fiber.Handler
 			return c.SendStatus(fiber.StatusNotAcceptable)
 		}
 
+		c.Status(fiber.StatusOK)
 		return c.JSON(resp)
 	}
 }
