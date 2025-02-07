@@ -20,6 +20,8 @@ type http struct {
 	tokenGenerator      myjwt.Myjwt
 	tokenExpirationTime int64
 	userService         contract.UserService
+	tableService        contract.TableService
+	reservationService  contract.ReservationServcie
 	logger              logger.Logger
 }
 
@@ -39,12 +41,16 @@ func New(
 	logger logger.Logger,
 	tokenExpirationTime int64,
 	userService contract.UserService,
+	tableService contract.TableService,
+	reservationService contract.ReservationServcie,
 ) httpserver.HttpPort {
 	return &http{
 		Handler:             handlers.NewHandler(logger),
 		tokenGenerator:      tokenGenerator,
 		tokenExpirationTime: tokenExpirationTime,
 		userService:         userService,
+		tableService:        tableService,
+		reservationService:  reservationService,
 		logger:              logger,
 	}
 }

@@ -10,15 +10,30 @@ func (h *http) setupAPIRoutes(api fiber.Router) {
 	api.Post("/users/login", h.HandleLogin(h.userService))
 	api.Post("/users/register", h.HandleRegister(h.userService))
 
-	// Other routes except for login must be protected by the token
+	// Routes that are defined after this middleware, are protected by JWT token.
 	api.Use(middleware.Authenticate(h.userService, h.tokenGenerator, h.tokenExpirationTime))
 
 	user := api.Group("/users")
+	table := api.Group("/tables")
+	reservations := api.Group("/reservations")
 
 	h.userRoutes(user)
-
+	h.tableRoutes(table)
+	h.reservationRoutes(reservations)
 }
 
 func (h *http) userRoutes(user fiber.Router) {
 	user.Get("/logout", h.HandleLogout(h.userService))
+}
+
+func (h *http) tableRoutes(table fiber.Router) {
+	table.Get("/all", h.HandleGetAllTables(h.tableService))
+	table.Post("/add", h.HandleAddTable(h.tableService))
+	table.Delete("/remove", h.HandleRemoveTable(h.tableService))
+	table.Get("/timetable", h.HandleTimetable(h.tableService))
+}
+
+func (h *http) reservationRoutes(reservation fiber.Router) {
+	reservation.Post("/book", h.HandleBook(h.reservationService))
+	reservation.Patch("/cancel", h.HandleCancelation(h.reservationService))
 }
