@@ -10,11 +10,20 @@ import (
 	"github.com/techerfan/2DCH7-20059/pkg/myjwt"
 	"github.com/techerfan/2DCH7-20059/repository/postgres"
 	"github.com/techerfan/2DCH7-20059/repository/redis"
+	"github.com/techerfan/2DCH7-20059/service/reservationservice"
+	"github.com/techerfan/2DCH7-20059/service/tableservice"
 	"github.com/techerfan/2DCH7-20059/service/userservice"
+
+	_ "github.com/techerfan/2DCH7-20059/docs/swagger"
 )
 
-// A day is consisted of 86400 seconds
-const TokenExpirationTime = 86400
+const (
+	// A day is consisted of 86400 seconds
+	TokenExpirationTime = 86400
+
+	// Seat cost
+	SeatCost = 500000
+)
 
 func main() {
 	// Read environment variables
@@ -58,11 +67,24 @@ func main() {
 	// User service instance
 	userService := userservice.New(TokenExpirationTime, tokenGenerator, postgresDB, redisDB)
 
+	// Table service instance
+	tableService := tableservice.New(postgresDB, postgresDB)
+
+	// Reservation service instance
+	reservationService := reservationservice.New(SeatCost, postgresDB, postgresDB)
+
 	// TODO: this must be replaced with a real logger
 	var dummyLogger logger.Logger = logger.DummyLogger{}
 
 	// HTTP server instance
-	httpServer := fiber.New(tokenGenerator, dummyLogger, TokenExpirationTime, userService)
+	httpServer := fiber.New(
+		tokenGenerator,
+		dummyLogger,
+		TokenExpirationTime,
+		userService,
+		tableService,
+		reservationService,
+	)
 
 	// Start the server
 	if err := httpServer.Start(fmt.Sprintf("%d", port)); err != nil {
