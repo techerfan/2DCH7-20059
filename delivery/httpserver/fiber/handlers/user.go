@@ -6,6 +6,19 @@ import (
 	"github.com/techerfan/2DCH7-20059/dto"
 )
 
+// @Summary 			Register a new user
+// @Description 	Register a new user
+// @Tags 					user
+// @Accept       	json
+// @Produce      	json
+// @Success 			200																{object}		dto.UserRegisterRequest
+// @Success 			200																{object}		dto.UserRegisterResponse
+// @Failure				400																"bad request"
+// @Failure 			401																"unauthorized"
+// @Failure 			406																"not acceptable"
+// @Failure 			500																"internal error"
+// @Security 			BearerAuth
+// @Router 				/users/register										[post]
 func (h *Handler) HandleRegister(accountService contract.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.UserRegisterRequest{}
@@ -25,6 +38,19 @@ func (h *Handler) HandleRegister(accountService contract.UserService) fiber.Hand
 	}
 }
 
+// @Summary 			login
+// @Description 	login
+// @Tags 					user
+// @Accept       	json
+// @Produce      	json
+// @Success 			200																{object}		dto.UserLoginRequest
+// @Success 			200																{object}		dto.UserLoginResponse
+// @Failure				400																"bad request"
+// @Failure 			401																"unauthorized"
+// @Failure 			406																"not acceptable"
+// @Failure 			500																"internal error"
+// @Security 			BearerAuth
+// @Router 				/users/login											[post]
 func (h *Handler) HandleLogin(accountService contract.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.UserLoginRequest{}

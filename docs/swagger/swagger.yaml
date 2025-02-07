@@ -99,6 +99,46 @@ definitions:
           $ref: '#/definitions/dto.TableTimetable'
         type: array
     type: object
+  dto.UserLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.UserLoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  dto.UserRegisterRequest:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      gender:
+        $ref: '#/definitions/entity.Gender'
+      last_name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+    type: object
+  dto.UserRegisterResponse:
+    properties:
+      user_id:
+        type: integer
+    type: object
+  entity.Gender:
+    enum:
+    - male
+    - female
+    type: string
+    x-enum-varnames:
+    - Male
+    - Female
 info:
   contact:
     email: techerfan@gmail.com
@@ -276,6 +316,56 @@ paths:
       summary: Get the timetable
       tags:
       - table
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserLoginResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: login
+      tags:
+      - user
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UserRegisterResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: Register a new user
+      tags:
+      - user
 securityDefinitions:
   BearerAuth:
     in: header
