@@ -42,7 +42,7 @@ func New(config Config) *PostgresDB {
 	}
 
 	// Use automigration to keep the tables up to date
-	if err := db.AutoMigrate(&User{}); err != nil {
+	if err := db.AutoMigrate(&User{}, &Table{}, &Reservation{}); err != nil {
 		panic("could not migrate: " + err.Error())
 	}
 

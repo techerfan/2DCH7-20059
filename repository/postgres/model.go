@@ -1,6 +1,8 @@
 package postgres
 
 import (
+	"time"
+
 	"github.com/techerfan/2DCH7-20059/entity"
 	"gorm.io/gorm"
 )
@@ -40,5 +42,72 @@ func mapUserEntitytoUser(user entity.User) User {
 		Email:       user.Email,
 		PhoneNumber: user.PhoneNumber,
 		Password:    user.Password,
+	}
+}
+
+// Table model to store in the database
+type Table struct {
+	gorm.Model
+
+	Number   uint8
+	Capacity uint8
+}
+
+// mapTableToTableEntity converts model to entity
+func mapTableToTableEntity(table Table) entity.Table {
+	return entity.Table{
+		ID:       table.ID,
+		Number:   table.Number,
+		Capacity: table.Capacity,
+	}
+}
+
+// mapTableEntitytoTable converts entity to model
+func mapTableEntitytoTable(table entity.Table) Table {
+	return Table{
+		Model:    gorm.Model{ID: table.ID},
+		Number:   table.Number,
+		Capacity: table.Capacity,
+	}
+}
+
+// Reservation model to store in the database
+type Reservation struct {
+	gorm.Model
+
+	NumberOfSeats uint8
+	UserID        uint
+	TableID       uint
+	ReceiptID     uint
+	StartDT       time.Time
+	EndDT         time.Time
+	IsCanceled    bool
+}
+
+// mapReservationToReservationEntity converts model to entity
+func mapReservationToReservationEntity(reservation Reservation) entity.Reservation {
+	return entity.Reservation{
+		ID:            reservation.ID,
+		NumberOfSeats: reservation.NumberOfSeats,
+		UserID:        reservation.UserID,
+		TableID:       reservation.TableID,
+		ReceiptID:     reservation.ReceiptID,
+		StartDT:       reservation.StartDT,
+		EndDT:         reservation.EndDT,
+		IsCanceled:    reservation.IsCanceled,
+	}
+}
+
+// mapReservationEntitytoReservation converts entity to model
+func mapReservationEntitytoReservation(reservation entity.Reservation) Reservation {
+	return Reservation{
+		Model:         gorm.Model{ID: reservation.ID},
+		NumberOfSeats: reservation.NumberOfSeats,
+		UserID:        reservation.UserID,
+		TableID:       reservation.TableID,
+		ReceiptID:     reservation.ReceiptID,
+		StartDT:       reservation.StartDT,
+		EndDT:         reservation.EndDT,
+		IsCanceled:    reservation.IsCanceled,
 	}
 }
