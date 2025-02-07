@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/techerfan/2DCH7-20059/contract"
 	"github.com/techerfan/2DCH7-20059/dto"
+	"github.com/techerfan/2DCH7-20059/validator/uservalidator"
 )
 
 // @Summary 			Register a new user
@@ -19,13 +20,21 @@ import (
 // @Failure 			500																"internal error"
 // @Security 			BearerAuth
 // @Router 				/users/register										[post]
-func (h *Handler) HandleRegister(accountService contract.UserService) fiber.Handler {
+func (h *Handler) HandleRegister(validator uservalidator.Validator, accountService contract.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.UserRegisterRequest{}
 
 		if err := c.BodyParser(&payload); err != nil {
 			h.logger.Errorf("could not parse login request: %v", err)
 			return err
+		}
+
+		if fieldErrors, err := validator.ValidateRegisterRequest(payload); err != nil {
+			c.Status(fiber.StatusNotAcceptable)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+				"errors":  fieldErrors,
+			})
 		}
 
 		resp, err := accountService.Register(c.Context(), payload)

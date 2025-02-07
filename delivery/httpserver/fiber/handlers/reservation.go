@@ -7,6 +7,7 @@ import (
 	"github.com/techerfan/2DCH7-20059/contract"
 	"github.com/techerfan/2DCH7-20059/dto"
 	"github.com/techerfan/2DCH7-20059/service/reservationservice"
+	"github.com/techerfan/2DCH7-20059/validator/reservationvalidator"
 )
 
 // @Summary 			book a table
@@ -22,7 +23,7 @@ import (
 // @Failure 			500																"internal error"
 // @Security 			BearerAuth
 // @Router 				/reservations/book			[post]
-func (h *Handler) HandleBook(reservationService contract.ReservationServcie) fiber.Handler {
+func (h *Handler) HandleBook(validator reservationvalidator.Validator, reservationService contract.ReservationServcie) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.ReservationBookRequest{}
 
@@ -33,10 +34,15 @@ func (h *Handler) HandleBook(reservationService contract.ReservationServcie) fib
 		}
 		// Extracting user id for validation purposes
 		userID := uint(c.UserContext().Value(contract.UserID).(float64))
-
 		payload.UserID = userID
 
-		// TODO: validate payload
+		if fieldErrors, err := validator.ValidateBookRequest(payload); err != nil {
+			c.Status(fiber.StatusNotAcceptable)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+				"errors":  fieldErrors,
+			})
+		}
 
 		resp, err := reservationService.Book(c.Context(), payload)
 		if err != nil {
@@ -67,7 +73,7 @@ func (h *Handler) HandleBook(reservationService contract.ReservationServcie) fib
 // @Failure 			500																"internal error"
 // @Security 			BearerAuth
 // @Router 				/reservations/cancel							[patch]
-func (h *Handler) HandleCancelation(reservationService contract.ReservationServcie) fiber.Handler {
+func (h *Handler) HandleCancelation(validator reservationvalidator.Validator, reservationService contract.ReservationServcie) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.ReservationCancelRequest{}
 
@@ -77,7 +83,17 @@ func (h *Handler) HandleCancelation(reservationService contract.ReservationServc
 			return err
 		}
 
-		// TODO: validate payload
+		// Extracting user id for validation purposes
+		userID := uint(c.UserContext().Value(contract.UserID).(float64))
+		payload.UserID = userID
+
+		if fieldErrors, err := validator.ValidateCancelationRequest(payload); err != nil {
+			c.Status(fiber.StatusNotAcceptable)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+				"errors":  fieldErrors,
+			})
+		}
 
 		resp, err := reservationService.Cancel(c.Context(), payload)
 		if err != nil {

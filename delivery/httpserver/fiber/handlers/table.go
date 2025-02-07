@@ -4,6 +4,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/techerfan/2DCH7-20059/contract"
 	"github.com/techerfan/2DCH7-20059/dto"
+	"github.com/techerfan/2DCH7-20059/validator/tablevalidator"
 )
 
 // @Summary 			Get all tables
@@ -46,7 +47,7 @@ func (h *Handler) HandleGetAllTables(tableService contract.TableService) fiber.H
 // @Failure 			500																"internal error"
 // @Security 			BearerAuth
 // @Router 				/tables/add												[post]
-func (h *Handler) HandleAddTable(tableService contract.TableService) fiber.Handler {
+func (h *Handler) HandleAddTable(validator tablevalidator.Validator, tableService contract.TableService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.TableAddRequest{}
 
@@ -56,7 +57,13 @@ func (h *Handler) HandleAddTable(tableService contract.TableService) fiber.Handl
 			return err
 		}
 
-		// TODO: validate payload
+		if fieldErrors, err := validator.ValidateAddTableRequest(payload); err != nil {
+			c.Status(fiber.StatusNotAcceptable)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+				"errors":  fieldErrors,
+			})
+		}
 
 		resp, err := tableService.AddTable(c.Context(), payload)
 		if err != nil {
@@ -83,7 +90,7 @@ func (h *Handler) HandleAddTable(tableService contract.TableService) fiber.Handl
 // @Failure 			500																"internal error"
 // @Security 			BearerAuth
 // @Router 				/tables/remove												[delete]
-func (h *Handler) HandleRemoveTable(tableService contract.TableService) fiber.Handler {
+func (h *Handler) HandleRemoveTable(validator tablevalidator.Validator, tableService contract.TableService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.TableRemoveRequest{}
 
@@ -93,7 +100,13 @@ func (h *Handler) HandleRemoveTable(tableService contract.TableService) fiber.Ha
 			return err
 		}
 
-		// TODO: validate payload
+		if fieldErrors, err := validator.ValidateRemoveTableRequest(payload); err != nil {
+			c.Status(fiber.StatusNotAcceptable)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+				"errors":  fieldErrors,
+			})
+		}
 
 		resp, err := tableService.RemoveTable(c.Context(), payload)
 		if err != nil {
@@ -119,7 +132,7 @@ func (h *Handler) HandleRemoveTable(tableService contract.TableService) fiber.Ha
 // @Failure 			500																"internal error"
 // @Security 			BearerAuth
 // @Router 				/tables/timetable												[get]
-func (h *Handler) HandleTimetable(tableService contract.TableService) fiber.Handler {
+func (h *Handler) HandleTimetable(validator tablevalidator.Validator, tableService contract.TableService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.TableTimetableRequest{}
 
@@ -129,7 +142,13 @@ func (h *Handler) HandleTimetable(tableService contract.TableService) fiber.Hand
 			return err
 		}
 
-		// TODO: validate payload
+		if fieldErrors, err := validator.ValidateTimetableRequest(payload); err != nil {
+			c.Status(fiber.StatusNotAcceptable)
+			return c.JSON(fiber.Map{
+				"message": err.Error(),
+				"errors":  fieldErrors,
+			})
+		}
 
 		resp, err := tableService.Timetable(c.Context(), payload)
 		if err != nil {

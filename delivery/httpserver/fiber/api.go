@@ -12,17 +12,23 @@ import (
 	"github.com/techerfan/2DCH7-20059/delivery/httpserver/fiber/handlers"
 	"github.com/techerfan/2DCH7-20059/pkg/logger"
 	"github.com/techerfan/2DCH7-20059/pkg/myjwt"
+	"github.com/techerfan/2DCH7-20059/validator/reservationvalidator"
+	"github.com/techerfan/2DCH7-20059/validator/tablevalidator"
+	"github.com/techerfan/2DCH7-20059/validator/uservalidator"
 )
 
 type http struct {
 	*handlers.Handler
-	app                 *fiber.App
-	tokenGenerator      myjwt.Myjwt
-	tokenExpirationTime int64
-	userService         contract.UserService
-	tableService        contract.TableService
-	reservationService  contract.ReservationServcie
-	logger              logger.Logger
+	app                  *fiber.App
+	tokenGenerator       myjwt.Myjwt
+	tokenExpirationTime  int64
+	userService          contract.UserService
+	tableService         contract.TableService
+	reservationService   contract.ReservationServcie
+	userValidator        uservalidator.Validator
+	tableValidator       tablevalidator.Validator
+	reservationValidator reservationvalidator.Validator
+	logger               logger.Logger
 }
 
 // @title 				Pars Tasmim
@@ -43,15 +49,21 @@ func New(
 	userService contract.UserService,
 	tableService contract.TableService,
 	reservationService contract.ReservationServcie,
+	userValidator uservalidator.Validator,
+	tableValidator tablevalidator.Validator,
+	reservationValidator reservationvalidator.Validator,
 ) httpserver.HttpPort {
 	return &http{
-		Handler:             handlers.NewHandler(logger),
-		tokenGenerator:      tokenGenerator,
-		tokenExpirationTime: tokenExpirationTime,
-		userService:         userService,
-		tableService:        tableService,
-		reservationService:  reservationService,
-		logger:              logger,
+		Handler:              handlers.NewHandler(logger),
+		tokenGenerator:       tokenGenerator,
+		tokenExpirationTime:  tokenExpirationTime,
+		userService:          userService,
+		tableService:         tableService,
+		reservationService:   reservationService,
+		userValidator:        userValidator,
+		tableValidator:       tableValidator,
+		reservationValidator: reservationValidator,
+		logger:               logger,
 	}
 }
 
