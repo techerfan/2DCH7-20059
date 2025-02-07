@@ -78,9 +78,9 @@ type Reservation struct {
 	NumberOfSeats uint8
 	UserID        uint
 	TableID       uint
-	ReceiptID     uint
 	StartDT       time.Time
 	EndDT         time.Time
+	Price         uint64
 	IsCanceled    bool
 }
 
@@ -91,7 +91,7 @@ func mapReservationToReservationEntity(reservation Reservation) entity.Reservati
 		NumberOfSeats: reservation.NumberOfSeats,
 		UserID:        reservation.UserID,
 		TableID:       reservation.TableID,
-		ReceiptID:     reservation.ReceiptID,
+		Price:         reservation.Price,
 		StartDT:       reservation.StartDT,
 		EndDT:         reservation.EndDT,
 		IsCanceled:    reservation.IsCanceled,
@@ -105,7 +105,7 @@ func mapReservationEntitytoReservation(reservation entity.Reservation) Reservati
 		NumberOfSeats: reservation.NumberOfSeats,
 		UserID:        reservation.UserID,
 		TableID:       reservation.TableID,
-		ReceiptID:     reservation.ReceiptID,
+		Price:         reservation.Price,
 		StartDT:       reservation.StartDT,
 		EndDT:         reservation.EndDT,
 		IsCanceled:    reservation.IsCanceled,

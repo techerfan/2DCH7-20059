@@ -98,7 +98,6 @@ func (s *Service) Timetable(ctx context.Context, req dto.TableTimetableRequest) 
 				NumberOfSeats: reservation.NumberOfSeats,
 				UserID:        reservation.UserID,
 				TableID:       reservation.TableID,
-				ReceiptID:     reservation.ReceiptID,
 				StartDT:       reservation.StartDT,
 				EndDT:         reservation.EndDT,
 			})
