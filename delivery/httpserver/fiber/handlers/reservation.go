@@ -31,6 +31,10 @@ func (h *Handler) HandleBook(reservationService contract.ReservationServcie) fib
 			c.Status(fiber.StatusBadRequest)
 			return err
 		}
+		// Extracting user id for validation purposes
+		userID := uint(c.UserContext().Value(contract.UserID).(float64))
+
+		payload.UserID = userID
 
 		// TODO: validate payload
 
