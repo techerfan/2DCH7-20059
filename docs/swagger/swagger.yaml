@@ -1,0 +1,284 @@
+basePath: /api
+definitions:
+  dto.Reservation:
+    properties:
+      end_dt:
+        type: string
+      id:
+        type: integer
+      is_canceled:
+        type: boolean
+      number_of_seats:
+        type: integer
+      receipt_id:
+        type: integer
+      start_dt:
+        type: string
+      table_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  dto.ReservationBookRequest:
+    properties:
+      end_dt:
+        type: string
+      number_of_seats:
+        type: integer
+      start_dt:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  dto.ReservationBookResponse:
+    properties:
+      price:
+        type: integer
+      reservation_id:
+        type: integer
+      seats:
+        type: integer
+      table_number:
+        type: integer
+    type: object
+  dto.ReservationCancelRequest:
+    properties:
+      reservation_id:
+        type: integer
+    type: object
+  dto.ReservationCancelResponse:
+    type: object
+  dto.Table:
+    properties:
+      capacity:
+        type: integer
+      id:
+        type: integer
+      table_number:
+        type: integer
+    type: object
+  dto.TableAddRequest:
+    properties:
+      capacity:
+        type: integer
+      table_number:
+        type: integer
+    type: object
+  dto.TableAddResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.TableAllResponse:
+    properties:
+      tables:
+        items:
+          $ref: '#/definitions/dto.Table'
+        type: array
+    type: object
+  dto.TableRemoveRequest:
+    properties:
+      id:
+        type: integer
+    type: object
+  dto.TableRemoveResponse:
+    type: object
+  dto.TableTimetable:
+    properties:
+      reservations:
+        items:
+          $ref: '#/definitions/dto.Reservation'
+        type: array
+      table_number:
+        type: integer
+    type: object
+  dto.TableTimetableResponse:
+    properties:
+      timetables:
+        items:
+          $ref: '#/definitions/dto.TableTimetable'
+        type: array
+    type: object
+info:
+  contact:
+    email: techerfan@gmail.com
+    name: Erfan Derakhshani
+    url: https://something.com
+  description: Code Challenge | 2DCH7-20059
+  title: Pars Tasmim
+  version: "1.0"
+paths:
+  /reservations/book:
+    post:
+      consumes:
+      - application/json
+      description: book a table
+      parameters:
+      - description: payload
+        in: body
+        name: '"payload"'
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReservationBookRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ReservationBookResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: book a table
+      tags:
+      - reservation
+  /reservations/cancel:
+    patch:
+      consumes:
+      - application/json
+      description: cancel a reservation
+      parameters:
+      - description: payload
+        in: body
+        name: '"payload"'
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ReservationCancelRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ReservationCancelResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: cancel a reservation
+      tags:
+      - reservation
+  /tables/add:
+    post:
+      consumes:
+      - application/json
+      description: Add a new table
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TableAddResponse'
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.TableAddRequest'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: Add a new table
+      tags:
+      - table
+  /tables/all:
+    get:
+      consumes:
+      - application/json
+      description: Get all tables
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TableAllResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: Get all tables
+      tags:
+      - table
+  /tables/remove:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a table
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TableRemoveResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: Delete a table
+      tags:
+      - table
+  /tables/timetable:
+    get:
+      consumes:
+      - application/json
+      description: Get the timetable
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.TableTimetableResponse'
+        "400":
+          description: bad request
+        "401":
+          description: unauthorized
+        "406":
+          description: not acceptable
+        "500":
+          description: internal error
+      security:
+      - BearerAuth: []
+      summary: Get the timetable
+      tags:
+      - table
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
