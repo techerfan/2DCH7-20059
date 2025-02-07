@@ -110,6 +110,10 @@ func (s *Service) Login(ctx context.Context, req dto.UserLoginRequest) (dto.User
 		return dto.UserLoginResponse{}, fmt.Errorf("unexpected error: %v", err)
 	}
 
+	if err := s.cache.SetToken(ctx, user.ID, accessToken, time.Second*time.Duration(s.tokenExpirationTime)); err != nil {
+		return dto.UserLoginResponse{}, fmt.Errorf("could not store the token in cache: %v", err)
+	}
+
 	return dto.UserLoginResponse{Token: accessToken}, nil
 }
 
