@@ -9,7 +9,7 @@ type (
 	}
 
 	TableTimetableRequest struct {
-		DT time.Time `json:"dt"`
+		DT time.Time `json:"dt" query:"dt"`
 	}
 
 	TableTimetableResponse struct {
