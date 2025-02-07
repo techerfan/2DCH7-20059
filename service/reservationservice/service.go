@@ -106,7 +106,7 @@ func (s *Service) Book(ctx context.Context, req dto.ReservationBookRequest) (dto
 	// Make the reservation
 	reservation, err := s.reservationRepo.CreateReservation(ctx, entity.Reservation{
 		TableID:       selectedTable.ID,
-		NumberOfSeats: req.NumberOfSeats,
+		NumberOfSeats: seatsNum,
 		UserID:        req.UserID,
 		StartDT:       req.StartDT,
 		EndDT:         req.EndDT,
