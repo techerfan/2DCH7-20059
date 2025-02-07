@@ -1,0 +1,5 @@
+package tableservice
+
+func setupTests() {
+
+}
