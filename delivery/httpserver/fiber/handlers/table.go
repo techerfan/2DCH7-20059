@@ -38,8 +38,8 @@ func (h *Handler) HandleGetAllTables(tableService contract.TableService) fiber.H
 // @Tags 					table
 // @Accept       	json
 // @Produce      	json
-// @Success 			201																{object}		dto.TableAddRequest
-// @Success 			200																{object}		dto.TableAddResponse
+// @Param 				"payload"													body 				dto.TableAddRequest 		true 	"payload"
+// @Success 			201																{object}		dto.TableAddResponse
 // @Failure				400																"bad request"
 // @Failure 			401																"unauthorized"
 // @Failure 			406																"not acceptable"
@@ -75,7 +75,7 @@ func (h *Handler) HandleAddTable(tableService contract.TableService) fiber.Handl
 // @Tags 					table
 // @Accept       	json
 // @Produce      	json
-// @Success 			200																{object}		dto.TableRemoveRequest
+// @Param 				"payload"													body 				dto.TableRemoveRequest 		true 	"payload"
 // @Success 			200																{object}		dto.TableRemoveResponse
 // @Failure				400																"bad request"
 // @Failure 			401																"unauthorized"
@@ -111,7 +111,7 @@ func (h *Handler) HandleRemoveTable(tableService contract.TableService) fiber.Ha
 // @Tags 					table
 // @Accept       	json
 // @Produce      	json
-// @Success 			200																{query}		dto.TableTimetableRequest
+// @Param 				"payload"													query 				dto.TableTimetableRequest 		true 	"payload"
 // @Success 			200																{object}		dto.TableTimetableResponse
 // @Failure				400																"bad request"
 // @Failure 			401																"unauthorized"

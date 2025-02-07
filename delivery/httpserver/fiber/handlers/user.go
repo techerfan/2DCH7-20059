@@ -11,7 +11,7 @@ import (
 // @Tags 					user
 // @Accept       	json
 // @Produce      	json
-// @Success 			200																{object}		dto.UserRegisterRequest
+// @Param 				"payload"													body 				dto.UserRegisterRequest 		true 	"payload"
 // @Success 			200																{object}		dto.UserRegisterResponse
 // @Failure				400																"bad request"
 // @Failure 			401																"unauthorized"
@@ -43,7 +43,7 @@ func (h *Handler) HandleRegister(accountService contract.UserService) fiber.Hand
 // @Tags 					user
 // @Accept       	json
 // @Produce      	json
-// @Success 			200																{object}		dto.UserLoginRequest
+// @Param 				"payload"													body 				dto.UserLoginRequest 		true 	"payload"
 // @Success 			200																{object}		dto.UserLoginResponse
 // @Failure				400																"bad request"
 // @Failure 			401																"unauthorized"
@@ -70,6 +70,18 @@ func (h *Handler) HandleLogin(accountService contract.UserService) fiber.Handler
 	}
 }
 
+// @Summary 			logout
+// @Description 	logout
+// @Tags 					user
+// @Accept       	json
+// @Produce      	json
+// @Success 			200																{object}		dto.UserLogoutResponse
+// @Failure				400																"bad request"
+// @Failure 			401																"unauthorized"
+// @Failure 			406																"not acceptable"
+// @Failure 			500																"internal error"
+// @Security 			BearerAuth
+// @Router 				/users/logout											[get]
 func (h *Handler) HandleLogout(accountService contract.UserService) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		payload := dto.UserLogoutRequest{}
