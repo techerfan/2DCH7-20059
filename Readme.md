@@ -74,3 +74,4 @@ Swagger documentation is available at `http://localhost:{PORT}/swagger/index.htm
 ## TODO
 - [ ] Add logger
 - [ ] Write tests
+- [ ] Implement locks for database
