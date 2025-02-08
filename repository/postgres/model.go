@@ -49,8 +49,9 @@ func mapUserEntitytoUser(user entity.User) User {
 type Table struct {
 	gorm.Model
 
-	Number   uint8
-	Capacity uint8
+	Number       uint8
+	Capacity     uint8
+	Reservations []Reservation `gorm:"foreignKey:TableID"`
 }
 
 // mapTableToTableEntity converts model to entity

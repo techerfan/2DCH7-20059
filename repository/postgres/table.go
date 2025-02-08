@@ -19,9 +19,31 @@ func (p *PostgresDB) AddTable(ctx context.Context, table entity.Table) (entity.T
 }
 
 func (p *PostgresDB) RemoveTableByID(ctx context.Context, id uint) error {
-	if err := p.db.WithContext(ctx).Unscoped().Where("id = ?", id).Delete(&Table{}).Error; err != nil {
+	// Start a transaction
+	tx := p.db.WithContext(ctx).Begin()
+
+	// Fetch the table
+	var table Table
+	if err := tx.Preload("Reservations").First(&table).Error; err != nil {
+		tx.Rollback()
 		return err
 	}
+
+	// Reservations related to this table must be deleted too
+	for _, reservation := range table.Reservations {
+		if err := tx.Unscoped().Delete(&reservation).Error; err != nil {
+			tx.Rollback()
+			return err
+		}
+	}
+
+	// Delete the table itself
+	if err := tx.Unscoped().Delete(&table).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	tx.Commit()
 	return nil
 }
 
