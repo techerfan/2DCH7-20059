@@ -11,12 +11,12 @@ import (
 type User struct {
 	gorm.Model
 
-	FirstName   string
-	LastName    string
-	Gender      string
-	Email       string
-	PhoneNumber string
-	Password    string
+	FirstName   string `gorm:"not null"`
+	LastName    string `gorm:"not null"`
+	Gender      string `gorm:"not null"`
+	Email       string `gorm:"not null;unique"`
+	PhoneNumber string `gorm:"not null"`
+	Password    string `gorm:"not null"`
 }
 
 // mapUsertoUserEntity converts model to entity
@@ -49,8 +49,8 @@ func mapUserEntitytoUser(user entity.User) User {
 type Table struct {
 	gorm.Model
 
-	Number       uint8
-	Capacity     uint8
+	Number       uint8         `gorm:"not null;unique"`
+	Capacity     uint8         `gorm:"not null"`
 	Reservations []Reservation `gorm:"foreignKey:TableID"`
 }
 
@@ -76,12 +76,12 @@ func mapTableEntitytoTable(table entity.Table) Table {
 type Reservation struct {
 	gorm.Model
 
-	NumberOfSeats uint8
-	UserID        uint
-	TableID       uint
-	StartDT       time.Time
-	EndDT         time.Time
-	Price         uint64
+	NumberOfSeats uint8     `gorm:"not null"`
+	UserID        uint      `gorm:"not null"`
+	TableID       uint      `gorm:"not null"`
+	StartDT       time.Time `gorm:"not null"`
+	EndDT         time.Time `gorm:"not null"`
+	Price         uint64    `gorm:"not null"`
 	IsCanceled    bool
 }
 
