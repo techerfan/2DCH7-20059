@@ -75,3 +75,4 @@ Swagger documentation is available at `http://localhost:{PORT}/swagger/index.htm
 - [ ] Add logger
 - [ ] Write tests
 - [ ] Implement locks for database
+- [x] Add constraints
